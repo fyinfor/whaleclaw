@@ -39,6 +39,40 @@ def handlebar(ContextInfo):
               'MyStrategy', 1, '备注', ContextInfo)
 ```
 
+## Helper scripts
+
+Use bundled scripts to validate parameters and format data before submitting orders.
+
+### Validate order parameters
+
+Validate `passorder()` parameters before submitting:
+
+```bash
+python {baseDir}/scripts/validate_order_params.py passorder 2 1101 "1000044" "000001.SZ" 14 0.0 100 "MyStrategy" 1 "备注"
+```
+
+Validate futures trading parameters:
+
+```bash
+python {baseDir}/scripts/validate_order_params.py futures "IF1805.IF" 1 "FIX" 3750
+python {baseDir}/scripts/validate_order_params.py futures "IF1805.IF" 1 "LATEST"
+```
+
+**When to use**: Before placing orders in production, especially when parameters come from variables or user input.
+
+### Format account data
+
+Format trade data from `get_trade_detail_data()` for readable display:
+
+```bash
+# Export data to JSON first (in QMT strategy)
+# Then format it:
+python {baseDir}/scripts/format_account_data.py trade account_data.json
+python {baseDir}/scripts/format_account_data.py order order_info.json
+```
+
+**When to use**: When debugging account queries or analyzing order history.
+
 ## Order placement
 
 Use `passorder()` for comprehensive order placement:
@@ -59,6 +93,8 @@ passorder(
 )
 ```
 
+**Tip**: Validate parameters with `scripts/validate_order_params.py` before submitting in production.
+
 ## Account queries
 
 ```python
@@ -77,6 +113,8 @@ limit = get_new_purchase_limit(account)
 # Order details by order ID
 order_info = get_value_by_order_id(order_id)
 ```
+
+**Tip**: Use `scripts/format_account_data.py` to format query results for debugging.
 
 ## Futures trading
 
@@ -169,15 +207,6 @@ rate_data = get_hkt_exchange_rate(account, 'HUGANGTONG')  # or 'SHENGANGTONG'
 - Editor mode orders don't generate actual orders - use for testing only.
 - QMT Python scripts typically require `#coding:gbk` encoding declaration.
 - `get_debt_contract()` is deprecated - use `get_unclosed_compacts()` and `get_closed_compacts()` instead.
-
-## Helper Scripts
-
-The skill includes utility scripts for parameter validation and data formatting:
-
-- `scripts/validate_order_params.py` - Validate `passorder()` and futures trading parameters before submitting orders
-- `scripts/format_account_data.py` - Format account and order data for readable display
-
-These scripts can be run outside QMT platform for testing and validation.
 
 ## Documentation
 
